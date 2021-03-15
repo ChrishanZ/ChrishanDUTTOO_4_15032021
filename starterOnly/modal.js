@@ -92,10 +92,10 @@ const formReady = (e) => {
     nom.value.length > 1 &&
     emailRegex(email.value) === true &&
     nombreConcours.value !== "" &&
-    ville === "" &&
+    ville !== "" &&
     cgu.checked === true
   ) {
-    alert("All datas are valid!, send it to the server!");
+    alert("Merci ! Votre réservation a été reçue.");
     return true;
   }
 };

@@ -7,32 +7,67 @@ function editNav() {
   }
 }
 
-// DOM Elements
+// -------------------------------------- DOM ELEMENTS --------------------------------------
 const modalbg = document.querySelector(".bground");
+const modalSuccess = document.querySelector(".bground2");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const modalExitBtn = document.querySelector(".close");
-// launch modal form
-function launchModal() {
-  modalbg.style.display = "block";
-}
-// launch modal event
-modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
+const modalSuccessExitBtn = document.querySelector(".close2");
 
-// quit modal event
-modalExitBtn.addEventListener("click", closeModal);
-
-// quit modal form
-function closeModal() {
-  modalbg.style.display = "none";
-}
+const quitSuccessBtn = document.getElementById("closeDivSuccess");
 
 const prenom = document.getElementById("first");
 const nom = document.getElementById("last");
 const email = document.getElementById("email");
+const birthDate = document.getElementById("birthdate");
 const nombreConcours = document.getElementById("quantity");
 const cgu = document.getElementById("checkbox1");
-// const notifications = document.getElementById("checkbox2");
+
+console.log(prenom.value);
+
+// -------------------------------------- MODAL --------------------------------------
+
+const launchModal = () => {
+  modalbg.style.display = "block";
+};
+
+const launchModalSuccess = () => {
+  modalSuccess.style.display = "block";
+};
+const closeModalSucess = () => {
+  modalSuccess.style.display = "none";
+};
+
+const closeModalSucessBtn = () => {
+  modalSuccess.style.display = "none";
+};
+
+const closeModal = () => {
+  modalbg.style.display = "none";
+};
+
+modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
+modalExitBtn.addEventListener("click", closeModal);
+modalSuccessExitBtn.addEventListener("click", closeModalSucess);
+quitSuccessBtn.addEventListener("click", closeModalSucessBtn);
+
+// -------------------------------------- VALIDATION FORMULAIRE --------------------------------------
+
+const checkTwoChar = (word, errorMsg, selector) => {
+  if (word.value.length > 1) {
+    document
+      .getElementById(selector)
+      .classList.replace("errorFormVisible", "errorForm");
+    return true;
+  } else {
+    document.getElementById(selector).innerHTML = errorMsg;
+    document
+      .getElementById(selector)
+      .classList.replace("errorForm", "errorFormVisible");
+    return false;
+  }
+};
 
 const emailRegex = (input) => {
   const regexEmail = /[^\s@]+@[^\s@]+\.[^\s@]+/;
@@ -42,61 +77,114 @@ const emailRegex = (input) => {
     return false;
   }
 };
+
+const checkEmail = (word, errorMsg, selector) => {
+  if (emailRegex(word.value)) {
+    document
+      .getElementById(selector)
+      .classList.replace("errorFormVisible", "errorForm");
+    return true;
+  } else {
+    document.getElementById(selector).innerHTML = errorMsg;
+    document
+      .getElementById(selector)
+      .classList.replace("errorForm", "errorFormVisible");
+    return false;
+  }
+};
+const checkBirthdate = (word, errorMsg, selector) => {
+  if (word.value !== "") {
+    document
+      .getElementById(selector)
+      .classList.replace("errorFormVisible", "errorForm");
+    return true;
+  } else {
+    document.getElementById(selector).innerHTML = errorMsg;
+    document
+      .getElementById(selector)
+      .classList.replace("errorForm", "errorFormVisible");
+    return false;
+  }
+};
+const checkTournoi = (word, errorMsg, selector) => {
+  if (word.value > 0 && word.value < 100) {
+    document
+      .getElementById(selector)
+      .classList.replace("errorFormVisible", "errorForm");
+    return true;
+  } else {
+    document.getElementById(selector).innerHTML = errorMsg;
+    document
+      .getElementById(selector)
+      .classList.replace("errorForm", "errorFormVisible");
+    return false;
+  }
+};
 let ville = "";
 var radios = document.querySelectorAll('input[type=radio][name="location"]');
 radios.forEach((radio) =>
   radio.addEventListener("change", () => (ville = radio.value))
 );
-
-console.log(document.querySelector("#first ~ span.errorForm"));
-
-const formReady = (e) => {
-  if (prenom.value.length === 0) {
-    e.preventDefault();
+const checkVille = (errorMsg, selector) => {
+  if (ville !== "") {
     document
-      .querySelector("#first ~ span.errorForm")
-      .classList.replace("errorForm", "errorFormVisible");
-  }
-  if (nom.value.length === 0) {
-    e.preventDefault();
-    document
-      .querySelector("#last ~ span.errorForm")
-      .classList.replace("errorForm", "errorFormVisible");
-  }
-  if (emailRegex(email.value) === false) {
-    e.preventDefault();
-    document
-      .querySelector("#email ~ span.errorForm")
-      .classList.replace("errorForm", "errorFormVisible");
-  }
-  if (nombreConcours.value === "") {
-    e.preventDefault();
-    document
-      .querySelector("#quantity ~ span.errorForm")
-      .classList.replace("errorForm", "errorFormVisible");
-  }
-  if (ville === "") {
-    e.preventDefault();
-    document
-      .querySelector("#location6 ~ span.errorForm")
-      .classList.replace("errorForm", "errorFormVisible");
-  }
-  if (cgu.checked === false) {
-    e.preventDefault();
-    document
-      .querySelector("#first ~ span.errorForm")
-      .classList.replace("errorForm", "errorFormVisible");
-  }
-  if (
-    prenom.value.length > 1 &&
-    nom.value.length > 1 &&
-    emailRegex(email.value) === true &&
-    nombreConcours.value !== "" &&
-    ville !== "" &&
-    cgu.checked === true
-  ) {
-    alert("Merci ! Votre réservation a été reçue.");
+      .getElementById(selector)
+      .classList.replace("errorFormVisible", "errorForm");
     return true;
+  } else {
+    document.getElementById(selector).innerHTML = errorMsg;
+    document
+      .getElementById(selector)
+      .classList.replace("errorForm", "errorFormVisible");
+    return false;
+  }
+};
+const checkCGU = (word, errorMsg, selector) => {
+  if (word.checked) {
+    document
+      .getElementById(selector)
+      .classList.replace("errorFormVisible", "errorForm");
+    return true;
+  } else {
+    document.getElementById(selector).innerHTML = errorMsg;
+    document
+      .getElementById(selector)
+      .classList.replace("errorForm", "errorFormVisible");
+    return false;
+  }
+};
+const formReady = (e) => {
+  e.preventDefault();
+  if (
+    checkTwoChar(
+      prenom,
+      "Veuillez entrer 2 caractères ou plus pour le champ du Prénom.",
+      "prenom"
+    ) &&
+    checkTwoChar(
+      nom,
+      "Veuillez entrer 2 caractères ou plus pour le champ du Nom.",
+      "nom"
+    ) &&
+    checkEmail(email, "Veuillez entrer un email correct.", "emailSpan") &&
+    checkBirthdate(
+      birthDate,
+      "Veuillez entrer une date de naissance.",
+      "birthdateSpan"
+    ) &&
+    checkTournoi(
+      nombreConcours,
+      "Veuillez entrer un nombre",
+      "tournoiNumber"
+    ) &&
+    checkVille("Veuillez entrer une ville.", "villeTournoi") &&
+    checkCGU(cgu, "Veuillez accepter les CGU", "cguSpan")
+  ) {
+    // return true;
+    closeModal();
+    launchModalSuccess();
+  } else {
+    return false;
   }
 };
 const submitBtn = document.getElementsByClassName("btn-submit")[0];

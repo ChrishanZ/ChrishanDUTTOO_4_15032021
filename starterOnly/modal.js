@@ -54,21 +54,46 @@ quitSuccessBtn.addEventListener("click", closeModalSucessBtn);
 
 // -------------------------------------- VALIDATION FORMULAIRE --------------------------------------
 
-const checkTwoChar = (word, errorMsg, selector) => {
-  if (word.value.length > 1) {
+// -------------- VALIDATION Variables --------------
+
+let prenomInput = false;
+let nomInput = false;
+let emailInput = false;
+let birthdateInput = false;
+let tournoiInput = false;
+let villeInput = false;
+let cguInput = false;
+let lettersRegex = /^[A-Za-z]+$/;
+
+const checkPrenom = (word, errorMsg, selector) => {
+  if (word.value.length > 1 && word.value.match(lettersRegex)) {
     document
       .getElementById(selector)
       .classList.replace("errorFormVisible", "errorForm");
-    return true;
+    prenomInput = true;
   } else {
     document.getElementById(selector).innerHTML = errorMsg;
     document
       .getElementById(selector)
       .classList.replace("errorForm", "errorFormVisible");
-    return false;
+    prenomInput = false;
   }
 };
 
+const checkNom = (word, errorMsg, selector) => {
+  if (word.value.length > 1 && word.value.match(lettersRegex)) {
+    document
+      .getElementById(selector)
+      .classList.replace("errorFormVisible", "errorForm");
+    nomInput = true;
+  } else {
+    document.getElementById(selector).innerHTML = errorMsg;
+    document
+      .getElementById(selector)
+      .classList.replace("errorForm", "errorFormVisible");
+    nomInput = false;
+  }
+};
 const emailRegex = (input) => {
   const regexEmail = /[^\s@]+@[^\s@]+\.[^\s@]+/;
   if (regexEmail.test(input)) {
@@ -83,41 +108,41 @@ const checkEmail = (word, errorMsg, selector) => {
     document
       .getElementById(selector)
       .classList.replace("errorFormVisible", "errorForm");
-    return true;
+    emailInput = true;
   } else {
     document.getElementById(selector).innerHTML = errorMsg;
     document
       .getElementById(selector)
       .classList.replace("errorForm", "errorFormVisible");
-    return false;
+    emailInput = false;
   }
 };
 const checkBirthdate = (word, errorMsg, selector) => {
-  if (word.value !== "") {
+  if (word.value.length === 10) {
     document
       .getElementById(selector)
       .classList.replace("errorFormVisible", "errorForm");
-    return true;
+    birthdateInput = true;
   } else {
     document.getElementById(selector).innerHTML = errorMsg;
     document
       .getElementById(selector)
       .classList.replace("errorForm", "errorFormVisible");
-    return false;
+    birthdateInput = false;
   }
 };
 const checkTournoi = (word, errorMsg, selector) => {
-  if (word.value > 0 && word.value < 100) {
+  if (word.value >= 0 && word.value < 100) {
     document
       .getElementById(selector)
       .classList.replace("errorFormVisible", "errorForm");
-    return true;
+    tournoiInput = true;
   } else {
     document.getElementById(selector).innerHTML = errorMsg;
     document
       .getElementById(selector)
       .classList.replace("errorForm", "errorFormVisible");
-    return false;
+    tournoiInput = false;
   }
 };
 let ville = "";
@@ -130,13 +155,13 @@ const checkVille = (errorMsg, selector) => {
     document
       .getElementById(selector)
       .classList.replace("errorFormVisible", "errorForm");
-    return true;
+    villeInput = true;
   } else {
     document.getElementById(selector).innerHTML = errorMsg;
     document
       .getElementById(selector)
       .classList.replace("errorForm", "errorFormVisible");
-    return false;
+    villeInput = false;
   }
 };
 const checkCGU = (word, errorMsg, selector) => {
@@ -144,47 +169,49 @@ const checkCGU = (word, errorMsg, selector) => {
     document
       .getElementById(selector)
       .classList.replace("errorFormVisible", "errorForm");
-    return true;
+    cguInput = true;
   } else {
     document.getElementById(selector).innerHTML = errorMsg;
     document
       .getElementById(selector)
       .classList.replace("errorForm", "errorFormVisible");
-    return false;
+    cguInput = false;
   }
 };
 const formReady = (e) => {
   e.preventDefault();
+
+  checkPrenom(
+    prenom,
+    "Veuillez entrer 2 caractères ou plus pour le champ du Prénom, et uniquement des lettres. ",
+    "prenom"
+  );
+  checkNom(
+    nom,
+    "Veuillez entrer 2 caractères ou plus pour le champ du Nom, et uniquement des lettres.",
+    "nom"
+  );
+  checkEmail(email, "Veuillez entrer un email correct.", "emailSpan");
+  checkBirthdate(
+    birthDate,
+    "Veuillez entrer une date de naissance.",
+    "birthdateSpan"
+  );
+  checkTournoi(nombreConcours, "Veuillez entrer un nombre", "tournoiNumber");
+  checkVille("Veuillez entrer une ville.", "villeTournoi");
+  checkCGU(cgu, "Veuillez accepter les CGU", "cguSpan");
+
   if (
-    checkTwoChar(
-      prenom,
-      "Veuillez entrer 2 caractères ou plus pour le champ du Prénom.",
-      "prenom"
-    ) &&
-    checkTwoChar(
-      nom,
-      "Veuillez entrer 2 caractères ou plus pour le champ du Nom.",
-      "nom"
-    ) &&
-    checkEmail(email, "Veuillez entrer un email correct.", "emailSpan") &&
-    checkBirthdate(
-      birthDate,
-      "Veuillez entrer une date de naissance.",
-      "birthdateSpan"
-    ) &&
-    checkTournoi(
-      nombreConcours,
-      "Veuillez entrer un nombre",
-      "tournoiNumber"
-    ) &&
-    checkVille("Veuillez entrer une ville.", "villeTournoi") &&
-    checkCGU(cgu, "Veuillez accepter les CGU", "cguSpan")
+    prenomInput &&
+    nomInput &&
+    emailInput &&
+    birthdateInput &&
+    tournoiInput &&
+    villeInput &&
+    cguInput
   ) {
-    // return true;
     closeModal();
     launchModalSuccess();
-  } else {
-    return false;
   }
 };
 const submitBtn = document.getElementsByClassName("btn-submit")[0];
